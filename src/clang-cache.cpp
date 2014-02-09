@@ -2,6 +2,6 @@
 
 int main()
 {
-  std::cout << "Le caching daemon, hon, hon hom!" << std::endl;
+  std::cout << "Le caching daemon, hon, hon hon!" << std::endl;
   return 0;
 }
