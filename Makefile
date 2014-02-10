@@ -1,5 +1,5 @@
 SOURCES		:= src/clang-cache.cpp src/daemon.cpp
-DOCSOURCES	:=
+DOCSOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
 CXXFLAGS	:= -std=c++11 -Wall -Wextra -Werror
