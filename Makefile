@@ -2,7 +2,7 @@ SOURCES		:= src/clang-cache.cpp src/daemon.cpp src/utils/mkdirp.cpp
 DOCSOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
-CXXFLAGS	:= -std=c++11 -Wall -Wextra -Werror
+CXXFLAGS	:= -std=c++11 -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src
 LDFLAGS		:=
 PREFIX		:= /usr/local
 

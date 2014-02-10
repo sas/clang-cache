@@ -1,7 +1,7 @@
 #include "daemon.h"
 
-#include "config.h"
-#include "utils/mkdirp.h"
+#include <config.h>
+#include <utils/mkdirp.h>
 
 #include <cstdlib>
 #include <err.h>
