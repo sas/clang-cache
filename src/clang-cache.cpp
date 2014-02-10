@@ -16,6 +16,12 @@ int main(int argc, char **argv)
     if (strcmp(argv[i], "--") == 0) {
       separator = i;
       break;
+    } else if (strcmp(argv[i], "--start") == 0) {
+      clc::server::start();
+      return EXIT_SUCCESS;
+    } else if (strcmp(argv[i], "--stop") == 0) {
+      clc::server::stop();
+      return EXIT_SUCCESS;
     }
   }
 
