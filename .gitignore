@@ -1,20 +1,7 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-
-# Generated Dependency files
 *.d
-
-# Compile output
+*.o
+*.a
+*.so
+*.1
 src/clang-cache
 build/
