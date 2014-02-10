@@ -1,4 +1,4 @@
-SOURCES		:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp
+SOURCES		:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/socket.cpp
 DOCSOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
