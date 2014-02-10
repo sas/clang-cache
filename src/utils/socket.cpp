@@ -16,6 +16,9 @@ int create_socket(const char* sock_path)
   if (fd == -1)
     return fd;
 
+  /* Remove old sockets laying around. */
+  unlink(sock_path);
+
   sun.sun_family = AF_UNIX;
   strcpy(sun.sun_path, sock_path);
 
