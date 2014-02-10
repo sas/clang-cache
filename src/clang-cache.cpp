@@ -1,5 +1,6 @@
 #include "daemon.h"
 
+#include <err.h>
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
@@ -19,7 +20,11 @@ int main(int argc, char **argv)
   compile_argv = argv + separator;
   compile_argv[0] = separator >= 2 ? argv[separator - 1] : strdup("clang");
 
-  std::cout << "Daemon is " << (clc::daemon::is_running() ? "" : "not ") << "running." << std::endl;
+  if (clc::daemon::start()) {
+    /* Send compile message to server. */
+  }
 
-  return execvp(compile_argv[0], compile_argv);
+  /* Run the compiler and print error message if execvp returns. */
+  execvp(compile_argv[0], compile_argv);
+  err(EXIT_FAILURE, "%s", compile_argv[0]);
 }

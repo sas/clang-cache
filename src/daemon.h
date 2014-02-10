@@ -2,6 +2,6 @@
 
 namespace clc { namespace daemon {
 
-bool is_running();
+bool start();
 
 }} // namespace clc::daemon

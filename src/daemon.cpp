@@ -18,4 +18,12 @@ bool is_running()
   return ret == 0 && S_ISSOCK(buf.st_mode);
 }
 
+bool start()
+{
+  if (is_running())
+    return true;
+
+  return true;
+}
+
 }} // namespace clc::daemon
