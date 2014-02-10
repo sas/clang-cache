@@ -1,3 +1,3 @@
-install: sudo apt-get install ruby-ronn
+install: gem install ronn
 script: make CXX=clang++ all
 after_success: sudo make install
