@@ -1,17 +1,19 @@
-#include <daemon.h>
+#include <client/client.h>
+#include <server/server.h>
 
-#include <cstring>
 #include <err.h>
-#include <iostream>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char **argv)
 {
-  int separator = 0;
+  int separator;
   char** compile_argv;
 
+  separator = 0;
   for (int i = 1; i < argc; ++i) {
-    if (std::strcmp(argv[i], "--") == 0) {
+    if (strcmp(argv[i], "--") == 0) {
       separator = i;
       break;
     }
@@ -20,8 +22,9 @@ int main(int argc, char **argv)
   compile_argv = argv + separator;
   compile_argv[0] = separator >= 2 ? argv[separator - 1] : (char*) "clang";
 
-  /* Start the daemon and send the compile command. */
-  clc::daemon::start();
+  /* Start the server and send the compile command. */
+  if (!clc::server::is_running())
+    clc::server::start();
 
   /* Run the compiler and print error message if execvp returns. */
   execvp(compile_argv[0], compile_argv);
