@@ -20,9 +20,8 @@ int main(int argc, char **argv)
   compile_argv = argv + separator;
   compile_argv[0] = separator >= 2 ? argv[separator - 1] : (char*) "clang";
 
-  if (clc::daemon::start()) {
-    /* Send compile message to server. */
-  }
+  /* Start the daemon and send the compile command. */
+  clc::daemon::start();
 
   /* Run the compiler and print error message if execvp returns. */
   execvp(compile_argv[0], compile_argv);

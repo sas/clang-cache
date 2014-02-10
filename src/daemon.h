@@ -2,6 +2,6 @@
 
 namespace clc { namespace daemon {
 
-bool start();
+void start();
 
 }} // namespace clc::daemon

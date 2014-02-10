@@ -1,4 +1,4 @@
-SOURCES		:= src/clang-cache.cpp src/daemon.cpp
+SOURCES		:= src/clang-cache.cpp src/daemon.cpp src/utils/mkdirp.cpp
 DOCSOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
