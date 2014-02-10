@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+
+# Generated Dependency files
+*.d
+
+# Compile output
+src/clang-cache
+build/
