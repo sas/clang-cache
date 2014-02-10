@@ -6,7 +6,9 @@
 #include <utils/socket.h>
 
 #include <err.h>
+#include <pthread.h>
 #include <signal.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -16,12 +18,17 @@ int main()
 {
   const auto sp = config::sock_path();
   int fd;
+  int client_fd;
 
   fd = utils::create_socket(sp.c_str());
   if (fd == -1)
     err(EXIT_FAILURE, "%s", sp.c_str());
 
-  while (42);
+  while ((client_fd = accept(fd, NULL, NULL)) != -1) {
+    close(client_fd);
+  }
+
+  return EXIT_FAILURE;
 }
 
 bool is_running()
