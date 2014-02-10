@@ -11,6 +11,11 @@
 
 namespace clc { namespace server {
 
+int main()
+{
+  while (42);
+}
+
 bool is_running()
 {
   struct stat buf;
@@ -30,7 +35,7 @@ void start()
 
   /* Create the server and run the main function. */
   if (utils::daemonize(config::pid_path().c_str()))
-    exit(0);
+    exit(main());
 }
 
 void stop()
