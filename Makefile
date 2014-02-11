@@ -1,15 +1,17 @@
-SOURCES		:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/socket.cpp
-DOCSOURCES	:= doc/clang-cache.1.md
+CXX_SOURCES	:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/socket.cpp
+THRIFT_SOURCES	:= src/proto.thrift
+DOC_SOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
 CXXFLAGS	:= -std=c++11 -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src
-LDFLAGS		:=
+LDFLAGS		:= -lthrift
 PREFIX		:= /usr/local
 
-OBJECTS		:= $(SOURCES:.cpp=.o)
-DEPENDS		:= $(SOURCES:.cpp=.d)
+GEN_SOURCES	:= $(THRIFT_SOURCES:.thrift=_types.cpp) $(THRIFT_SOURCES:.thrift=_constants.cpp)
+OBJECTS		:= $(CXX_SOURCES:.cpp=.o) $(GEN_SOURCES:.cpp=.o)
+DEPENDS		:= $(OBJECTS:.o=.d)
 TARGET		:= src/clang-cache
-DOCTARGETS	:= $(DOCSOURCES:.1.md=.1)
+DOCTARGETS	:= $(DOC_SOURCES:.1.md=.1)
 
 VPATH		:= $(dir $(lastword $(MAKEFILE_LIST)))
 
@@ -24,6 +26,7 @@ install: all
 	install -t $(PREFIX)/share/man/man1/ $(DOCTARGETS)
 
 clean:
+	rm -f $(GEN_SOURCES)
 	rm -f $(OBJECTS)
 	rm -f $(DEPENDS)
 
@@ -38,10 +41,15 @@ $(TARGET): $(OBJECTS)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -MMD -o $@ -c $<
 
+%_types.cpp %_types.h %_constants.cpp %_constants.h: %.thrift
+	@mkdir -p $(dir $@)
+	thrift --gen cpp -out $(dir $<) $<
+
 %.1: %.1.md
 	@mkdir -p $(dir $@)
 	ronn --roff --pipe $< >$@
 
 .PHONY: all install clean distclean
+.SECONDARY:
 
 -include $(DEPENDS)
