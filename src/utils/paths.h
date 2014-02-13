@@ -6,7 +6,7 @@
 
 namespace clc { namespace utils {
 
-std::string run_path()
+static inline std::string run_path()
 {
   std::ostringstream os;
 
@@ -15,12 +15,12 @@ std::string run_path()
   return os.str();
 }
 
-std::string sock_path()
+static inline std::string sock_path()
 {
   return run_path() + "/sock";
 }
 
-std::string pid_path()
+static inline std::string pid_path()
 {
   return run_path() + "/pid";
 }
