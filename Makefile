@@ -3,8 +3,8 @@ THRIFT_SOURCES	:= src/proto.thrift
 DOC_SOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
-CXXFLAGS	:= -std=c++11 -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src
-LDFLAGS		:= -lthrift
+CXXFLAGS	:= `pkg-config --cflags thrift` -std=c++11 -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src
+LDFLAGS		:= `pkg-config --libs thrift`
 PREFIX		:= /usr/local
 
 GEN_SOURCES	:= $(THRIFT_SOURCES:.thrift=_types.cpp) $(THRIFT_SOURCES:.thrift=_constants.cpp)
