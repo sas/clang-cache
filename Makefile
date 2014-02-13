@@ -8,6 +8,7 @@ LDFLAGS		:= -lthrift
 PREFIX		:= /usr/local
 
 GEN_SOURCES	:= $(THRIFT_SOURCES:.thrift=_types.cpp) $(THRIFT_SOURCES:.thrift=_constants.cpp)
+GEN_HEADERS	:= $(THRIFT_SOURCES:.thrift=_types.h) $(THRIFT_SOURCES:.thrift=_constants.h)
 OBJECTS		:= $(CXX_SOURCES:.cpp=.o) $(GEN_SOURCES:.cpp=.o)
 DEPENDS		:= $(OBJECTS:.o=.d)
 TARGET		:= src/clang-cache
@@ -26,7 +27,7 @@ install: all
 	install -t $(PREFIX)/share/man/man1/ $(DOCTARGETS)
 
 clean:
-	rm -f $(GEN_SOURCES)
+	rm -f $(GEN_SOURCES) $(GEN_HEADERS)
 	rm -f $(OBJECTS)
 	rm -f $(DEPENDS)
 
