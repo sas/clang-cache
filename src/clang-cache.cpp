@@ -1,38 +1,82 @@
 #include <client/client.h>
 #include <server/server.h>
 
+#include <assert.h>
 #include <err.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-int main(int argc, char **argv)
-{
-  int separator;
-  char** compile_argv;
+struct options {
+  char* compiler;
+  bool foreground;
+  enum {
+    ACTION_NONE,
+    ACTION_START,
+    ACTION_KILL,
+  } action;
+} options;
 
-  separator = 0;
-  for (int i = 1; i < argc; ++i) {
-    if (strcmp(argv[i], "--") == 0) {
-      separator = i;
-      break;
-    } else if (strcmp(argv[i], "--start") == 0) {
-      clc::server::start();
-      return EXIT_SUCCESS;
-    } else if (strcmp(argv[i], "--stop") == 0) {
-      clc::server::stop();
-      return EXIT_SUCCESS;
+static void usage_die(const char* argv0)
+{
+  fprintf(stderr, "usage: %s [ -c COMPILER | -s | -k | -f ] -- COMPILER_OPTIONS\n", argv0);
+  exit(EXIT_FAILURE);
+}
+
+static void parse_options(int argc, char** argv)
+{
+  int opt;
+
+  options.compiler = strdup("clang");
+  options.foreground = false;
+  options.action = options::ACTION_NONE;
+
+  while ((opt = getopt(argc, argv, "c:skf")) != -1) {
+    switch (opt) {
+      case 'c':
+        free(options.compiler);
+        options.compiler = strdup(optarg);
+        break;
+      case 's':
+        options.action = options::ACTION_START;
+        break;
+      case 'k':
+        options.action = options::ACTION_KILL;
+        break;
+      case 'f':
+        options.foreground = true;
+        break;
+      default:
+        usage_die(argv[0]);
     }
   }
+}
 
-  compile_argv = argv + separator;
-  compile_argv[0] = separator >= 2 ? argv[separator - 1] : (char*) "clang";
+int main(int argc, char **argv)
+{
+  parse_options(argc, argv);
 
-  /* Start the server and send the compile command. */
-  if (!clc::server::is_running())
-    clc::server::start();
+  switch (options.action) {
+    case options::ACTION_START:
+      clc::server::start(options.foreground);
+      return EXIT_SUCCESS;
+    case options::ACTION_KILL:
+      clc::server::stop();
+      return EXIT_SUCCESS;
+    case options::ACTION_NONE:
+      /* Start the server and send the compile command. */
+      if (!clc::server::is_running())
+        clc::server::start();
 
-  /* Run the compiler and print error message if execvp returns. */
-  execvp(compile_argv[0], compile_argv);
-  err(EXIT_FAILURE, "%s", compile_argv[0]);
+      /* We need a free slot to stash the compiler name. */
+      assert(optind >= 1);
+      argc -= optind - 1;
+      argv += optind - 1;
+      argv[0] = options.compiler;
+
+      /* Run the compiler and print error message if execvp returns. */
+      execvp(argv[0], argv);
+      err(EXIT_FAILURE, "%s", argv[0]);
+  }
 }

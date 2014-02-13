@@ -3,7 +3,7 @@
 namespace clc { namespace server {
 
 bool is_running();
-void start();
+void start(bool foreground = false);
 void stop();
 
 }} // namespace clc::server

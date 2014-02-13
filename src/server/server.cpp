@@ -42,7 +42,7 @@ bool is_running()
   return kill(pid, 0) == 0;
 }
 
-void start()
+void start(bool foreground)
 {
   const auto rp = config::run_path();
   const auto pp = config::pid_path();
@@ -56,7 +56,7 @@ void start()
   utils::mkdirp(rp.c_str());
 
   /* Create the server and run the main function. */
-  if (utils::daemonize(pp.c_str()))
+  if (foreground || utils::daemonize(pp.c_str()))
     exit(main());
 }
 
