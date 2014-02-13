@@ -44,7 +44,7 @@ $(TARGET): $(OBJECTS)
 
 %_types.cpp %_types.h %_constants.cpp %_constants.h: %.thrift
 	@mkdir -p $(dir $@)
-	thrift --gen cpp -out $(dir $<) $<
+	thrift --gen cpp -out $(dir $@) $<
 
 %.1: %.1.md
 	@mkdir -p $(dir $@)
