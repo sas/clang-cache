@@ -1,8 +1,8 @@
 #include "server.h"
 
-#include <config.h>
 #include <utils/daemon.h>
 #include <utils/mkdirp.h>
+#include <utils/paths.h>
 #include <utils/socket.h>
 
 #include <err.h>
@@ -16,7 +16,7 @@ namespace clc { namespace server {
 
 int main()
 {
-  const auto sp = config::sock_path();
+  const auto sp = utils::sock_path();
   int fd;
   int client_fd;
 
@@ -33,7 +33,7 @@ int main()
 
 bool is_running()
 {
-  const auto pp = config::pid_path();
+  const auto pp = utils::pid_path();
   pid_t pid;
 
   if (!utils::read_pidfile(pp.c_str(), &pid))
@@ -44,8 +44,8 @@ bool is_running()
 
 void start(bool foreground)
 {
-  const auto rp = config::run_path();
-  const auto pp = config::pid_path();
+  const auto rp = utils::run_path();
+  const auto pp = utils::pid_path();
 
   if (is_running()) {
     warnx("server already running");
@@ -62,7 +62,7 @@ void start(bool foreground)
 
 void stop()
 {
-  const auto pp = config::pid_path();
+  const auto pp = utils::pid_path();
   pid_t pid;
 
   if (!is_running()) {

@@ -4,7 +4,7 @@
 #include <string>
 #include <unistd.h>
 
-namespace clc { namespace config {
+namespace clc { namespace utils {
 
 std::string run_path()
 {
@@ -25,5 +25,4 @@ std::string pid_path()
   return run_path() + "/pid";
 }
 
-
-}} // namespace clc::config
+}} // namespace clc::utils
