@@ -14,6 +14,7 @@ before_install:
 install:
   - gem install ronn
   - sudo apt-get install -qq thrift-compiler libthrift-dev libboost1.55-dev
+  - "sudo sed -i -e 's/Cflags: /Cflags: -DHAVE_CONFIG_H /g' /usr/lib/pkgconfig/thrift*.pc" # Yep...
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; export CXX="g++-4.8"; fi
 
 before_script:
