@@ -6,15 +6,19 @@ env:
   - BUILDDIR=.
   - BUILDDIR=build
 
-install:
-  - gem install ronn
+before_install:
   - sudo add-apt-repository -y ppa:wnoronha/thrift
   - sudo add-apt-repository -y ppa:boost-latest/ppa
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
+install:
+  - gem install ronn
   - sudo apt-get install -qq thrift-compiler libthrift-dev libboost1.55-dev
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; export CXX="g++-4.8"; fi
 
-before_script: mkdir -p "$BUILDDIR"
-script: cd "$BUILDDIR" && make -f "$OLDPWD/Makefile" all
-after_success: sudo make install
+before_script:
+  - mkdir -p "$BUILDDIR"
+  - cd "$BUILDDIR"
+script:
+  - make -f "$OLDPWD/Makefile" all
+  - sudo make -f "$OLDPWD/Makefile" install
