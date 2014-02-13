@@ -9,7 +9,7 @@
 
 namespace clc { namespace utils {
 
-void mkdirp_rec(char* path)
+void mkdirp(char* path)
 {
   char* last;
 
@@ -30,7 +30,7 @@ void mkdirp(const char* path)
   char* path_copy;
 
   path_copy = strdup(path);
-  mkdirp_rec(path_copy);
+  mkdirp(path_copy);
   free(path_copy);
 }
 
