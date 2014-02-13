@@ -25,4 +25,9 @@ static inline std::string pid_path()
   return run_path() + "/pid";
 }
 
+static inline std::string log_path()
+{
+  return run_path() + "/log";
+}
+
 }} // namespace clc::utils
