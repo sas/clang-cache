@@ -1,11 +1,11 @@
 #include "server.h"
 
 #include <utils/daemon.h>
+#include <utils/logger.h>
 #include <utils/mkdirp.h>
 #include <utils/paths.h>
 #include <utils/socket.h>
 
-#include <err.h>
 #include <pthread.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -20,9 +20,7 @@ int main()
   int fd;
   int client_fd;
 
-  fd = utils::create_socket(sp.c_str());
-  if (fd == -1)
-    err(EXIT_FAILURE, "%s", sp.c_str());
+  PLOG_FATAL((fd = utils::create_socket(sp.c_str())) == -1) << sp.c_str();
 
   while ((client_fd = accept(fd, NULL, NULL)) != -1) {
     close(client_fd);
@@ -48,7 +46,7 @@ void start(bool foreground)
   const auto pp = utils::pid_path();
 
   if (is_running()) {
-    warnx("server already running");
+    LOG_WARN() << "server already running";
     return;
   }
 
@@ -66,18 +64,13 @@ void stop()
   pid_t pid;
 
   if (!is_running()) {
-    warnx("server not running");
+    LOG_WARN() << "server not running";
     return;
   }
 
-  if (!utils::read_pidfile(pp.c_str(), &pid))
-    err(EXIT_FAILURE, "%s", pp.c_str());
-
-  if (kill(pid, SIGTERM) == -1)
-    err(EXIT_FAILURE, "process %d", pid);
-
-  if (unlink(pp.c_str()) == -1)
-    err(EXIT_FAILURE, "%s", pp.c_str());
+  PLOG_FATAL(!utils::read_pidfile(pp.c_str(), &pid)) << pp.c_str();
+  PLOG_FATAL(kill(pid, SIGTERM) == -1) << "process " << pid;
+  PLOG_FATAL(unlink(pp.c_str()) == -1) << pp.c_str();
 }
 
 }} // namespace clc::server

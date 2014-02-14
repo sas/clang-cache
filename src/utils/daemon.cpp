@@ -1,6 +1,7 @@
 #include "daemon.h"
 
-#include <err.h>
+#include <utils/logger.h>
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,32 +44,24 @@ bool daemonize(const char* pid_path)
   /* Double fork. */
   pid_t ret;
 
-  ret = fork();
-  if (ret == -1) {
-    err(EXIT_FAILURE, "fork()");
-  } else if (ret > 0) {
+  PLOG_FATAL((ret = fork()) == -1) << "fork()";
+  if (ret > 0) {
     waitpid(ret, NULL, 0);
     return false;
   }
 
-  ret = fork();
-  if (ret == -1) {
-    err(EXIT_FAILURE, "fork()");
-  } else if (ret > 0) {
+  PLOG_FATAL((ret = fork()) == -1) << "fork()";
+  if (ret > 0)
     exit(EXIT_SUCCESS);
-  }
 
   /* Write PID. */
-  if (!write_pidfile(pid_path))
-    err(EXIT_FAILURE, "%s", pid_path);
+  PLOG_FATAL(!write_pidfile(pid_path)) << pid_path;
 
   /* Change directory. */
-  if (chdir("/") == -1)
-    warn("%s", "/");
+  PLOG_WARN(chdir("/") == -1) << "/";
 
   /* Create new session ID. */
-  if (setsid() == -1)
-    warn("setsid()");
+  PLOG_WARN(setsid() == -1) << "setsid()";
 
   /* Close standard streams. */
   int fd;

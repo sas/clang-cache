@@ -1,8 +1,8 @@
 #include <client/client.h>
 #include <server/server.h>
+#include <utils/logger.h>
 
 #include <assert.h>
-#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +76,6 @@ int main(int argc, char **argv)
       argv[0] = options.compiler;
 
       /* Run the compiler and print error message if execvp returns. */
-      execvp(argv[0], argv);
-      err(EXIT_FAILURE, "%s", argv[0]);
+      PLOG_FATAL(execvp(argv[0], argv) == -1) << argv[0];
   }
 }

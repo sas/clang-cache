@@ -1,6 +1,7 @@
 #include "mkdirp.h"
 
-#include <err.h>
+#include <utils/logger.h>
+
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,8 +22,7 @@ void mkdirp(char* path)
     *last = '/';
   }
 
-  if (mkdir(path, 0777) == -1 && errno != EEXIST)
-    err(EXIT_FAILURE, "%s", path);
+  PLOG_FATAL(mkdir(path, 0777) == -1 && errno != EEXIST) << path;
 }
 
 void mkdirp(const char* path)
