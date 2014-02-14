@@ -44,6 +44,7 @@ void start(bool foreground)
 {
   const auto rp = utils::run_path();
   const auto pp = utils::pid_path();
+  pid_t pid;
 
   if (is_running()) {
     LOG_WARN() << "server already running";
@@ -54,8 +55,13 @@ void start(bool foreground)
   utils::mkdirp(rp.c_str());
 
   /* Create the server and run the main function. */
-  if (foreground || utils::daemonize(pp.c_str()))
+  if (foreground || utils::daemonize()) {
+    PLOG_FATAL(!utils::write_pidfile(pp.c_str())) << pp.c_str();
     exit(main());
+  }
+
+  PLOG_FATAL(!utils::read_pidfile(pp.c_str(), &pid)) << pp.c_str();
+  LOG_INFO() << "started server with pid " << pid;
 }
 
 void stop()
@@ -71,6 +77,7 @@ void stop()
   PLOG_FATAL(!utils::read_pidfile(pp.c_str(), &pid)) << pp.c_str();
   PLOG_FATAL(kill(pid, SIGTERM) == -1) << "process " << pid;
   PLOG_FATAL(unlink(pp.c_str()) == -1) << pp.c_str();
+  LOG_INFO() << "stopped server with pid " << pid;
 }
 
 }} // namespace clc::server

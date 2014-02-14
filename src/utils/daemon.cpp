@@ -39,7 +39,7 @@ bool write_pidfile(const char* pid_path)
   return true;
 }
 
-bool daemonize(const char* pid_path)
+bool daemonize()
 {
   /* Double fork. */
   pid_t ret;
@@ -53,9 +53,6 @@ bool daemonize(const char* pid_path)
   PLOG_FATAL((ret = fork()) == -1) << "fork()";
   if (ret > 0)
     exit(EXIT_SUCCESS);
-
-  /* Write PID. */
-  PLOG_FATAL(!write_pidfile(pid_path)) << pid_path;
 
   /* Change directory. */
   PLOG_WARN(chdir("/") == -1) << "/";
