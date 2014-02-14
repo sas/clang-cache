@@ -71,7 +71,8 @@ bool daemonize(const char* pid_path)
     warn("setsid()");
 
   /* Close standard streams. */
-  if (int fd = open("/dev/null", O_RDWR) > 0)
+  int fd;
+  if ((fd = open("/dev/null", O_RDWR)) >= 0)
     for (int i = 0; i < 3; ++i)
       dup2(fd, i);
 
