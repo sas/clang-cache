@@ -36,7 +36,7 @@ distclean: clean
 	rm -f $(DOCTARGETS)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cpp
 	@mkdir -p $(dir $@)
