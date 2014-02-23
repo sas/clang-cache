@@ -83,6 +83,8 @@ int main(int argc, char **argv)
       argv += optind - 1;
       argv[0] = options.compiler;
 
+      clc::client::send_file(argc, argv);
+
       /* Run the compiler and print error message if execvp returns. */
       PLOG_FATAL(execvp(argv[0], argv) == -1) << argv[0];
   }

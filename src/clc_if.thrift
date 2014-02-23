@@ -33,5 +33,5 @@ service clc_if {
   jump_answer jump_to_declaration(1: request r),
   jump_answer jump_to_definition(1: request r),
 
-  oneway void add_file(1: string compile_cmd),
+  oneway void add_file(1: list<string> argv),
 }

@@ -54,9 +54,9 @@ public:
     LOG_INFO() << "goto_def";
   }
 
-  void add_file(const std::string& compile_cmd)
+  void add_file(const std::vector<std::string>& argv)
   {
-    (void)compile_cmd;
+    (void)argv;
 
     LOG_INFO() << "add_file";
   }
