@@ -62,9 +62,20 @@ public:
   }
 };
 
+static tserver::TSimpleServer *server;
+
+static void stop_server(int sig)
+{
+  (void)sig;
+
+  if (server != NULL)
+    server->stop();
+}
+
 int main()
 {
   const auto sp = utils::sock_path();
+  const auto pp = utils::pid_path();
 
   auto service = boost::make_shared<clcService>();
   auto proc = boost::make_shared<clc::rpc::clc_ifProcessor>(service);
@@ -72,10 +83,17 @@ int main()
   auto transport_factory = boost::make_shared<ttransport::TBufferedTransportFactory>();
   auto protocol_factory = boost::make_shared<tprotocol::TCompactProtocolFactory>();
 
-  tserver::TSimpleServer server(proc, server_transport, transport_factory,
-                                protocol_factory);
+  signal(SIGTERM, stop_server);
+  signal(SIGINT, stop_server);
 
-  server.serve();
+  server = new tserver::TSimpleServer(proc, server_transport, transport_factory,
+                                      protocol_factory);
+  server->serve();
+
+  delete server;
+
+  PLOG_FATAL(unlink(pp.c_str()) == -1) << pp.c_str();
+  PLOG_FATAL(unlink(sp.c_str()) == -1) << sp.c_str();
 
   return EXIT_FAILURE;
 }
@@ -127,7 +145,6 @@ void stop()
 
   PLOG_FATAL(!utils::read_pidfile(pp.c_str(), &pid)) << pp.c_str();
   PLOG_FATAL(kill(pid, SIGTERM) == -1) << "process " << pid;
-  PLOG_FATAL(unlink(pp.c_str()) == -1) << pp.c_str();
   LOG_INFO() << "stopped server with pid " << pid;
 }
 
