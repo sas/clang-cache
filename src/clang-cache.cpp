@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <thrift/Thrift.h>
 #include <unistd.h>
 
 struct options {
@@ -53,9 +54,16 @@ static void parse_options(int argc, char** argv)
   }
 }
 
+static void thrift_logger(const char *msg)
+{
+  LOG_INFO() << "Thrift: " << msg;
+}
+
 int main(int argc, char **argv)
 {
   parse_options(argc, argv);
+
+  apache::thrift::GlobalOutput.setOutputFunction(thrift_logger);
 
   switch (options.action) {
     case options::ACTION_START:
