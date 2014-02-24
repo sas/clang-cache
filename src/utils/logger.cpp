@@ -45,7 +45,7 @@ logger::logger_proxy::~logger_proxy()
     exit(EXIT_FAILURE);
 }
 
-static void thrift_logger(const char *msg)
+static void thrift_logger(const char* msg)
 {
   LOG_INFO() << "Thrift: " << msg;
 }

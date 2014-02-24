@@ -33,9 +33,7 @@ void send_file(int argc, char** argv)
        */
       transport->open();
     } catch (ttransport::TTransportException& e) {
-      /*
-       * I wonder if that is a bug in thrift...
-       */
+      /* I wonder if that is a bug in thrift. */
       transport->close();
     }
   } while (!transport->isOpen());

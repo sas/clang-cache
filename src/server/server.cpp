@@ -17,14 +17,14 @@
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/transport/TServerSocket.h>
 
-#include <clc_if_types.h>
 #include <clc_if.h>
+#include <clc_if_types.h>
+
+namespace clc { namespace server {
 
 namespace tprotocol = apache::thrift::protocol;
 namespace ttransport = apache::thrift::transport;
 namespace tserver = apache::thrift::server;
-
-namespace clc { namespace server {
 
 class clcService : public clc::rpc::clc_ifIf {
 public:
