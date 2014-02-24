@@ -16,7 +16,7 @@ namespace ttransport = apache::thrift::transport;
 
 namespace clc { namespace client {
 
-void send_file(int argc, char** argv)
+void run(int argc, char** argv)
 {
   auto socket = boost::make_shared<ttransport::TSocket>(utils::sock_path());
   auto transport = boost::make_shared<ttransport::TBufferedTransport>(socket);

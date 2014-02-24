@@ -63,7 +63,7 @@ static void stop_server(ATTR_UNUSED int sig)
     server->stop();
 }
 
-int main()
+int run()
 {
   const auto sp = utils::sock_path();
   const auto pp = utils::pid_path();
@@ -117,7 +117,7 @@ void start(bool foreground)
   /* Create the server and run the main function. */
   if (foreground || utils::daemonize()) {
     PLOG_FATAL(!utils::write_pidfile(pp.c_str())) << pp.c_str();
-    exit(main());
+    exit(run());
   }
 
   PLOG_FATAL(!utils::read_pidfile(pp.c_str(), &pid)) << pp.c_str();
