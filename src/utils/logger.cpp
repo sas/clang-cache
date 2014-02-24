@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <map>
+#include <thrift/Thrift.h>
 
 namespace clc { namespace utils {
 
@@ -44,9 +45,15 @@ logger::logger_proxy::~logger_proxy()
     exit(EXIT_FAILURE);
 }
 
+static void thrift_logger(const char *msg)
+{
+  LOG_INFO() << "Thrift: " << msg;
+}
+
 logger::logger()
   : level_(INFO)
 {
+  apache::thrift::GlobalOutput.setOutputFunction(thrift_logger);
 }
 
 void logger::set_level(log_level level)
