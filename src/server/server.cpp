@@ -1,5 +1,6 @@
 #include "server.h"
 
+#include <utils/compiler.h>
 #include <utils/daemon.h>
 #include <utils/logger.h>
 #include <utils/mkdirp.h>
@@ -30,44 +31,34 @@ class clcService : public clc::rpc::clc_ifIf {
 public:
   clcService() {}
 
-  void complete(clc::rpc::completion_answer& ret, const clc::rpc::request& r)
+  void complete(ATTR_UNUSED clc::rpc::completion_answer& ret,
+                ATTR_UNUSED const clc::rpc::request& r)
   {
-    (void)ret;
-    (void)r;
-
     LOG_INFO() << "complete";
   }
 
-  void jump_to_declaration(clc::rpc::jump_answer& ret, const clc::rpc::request& r)
+  void jump_to_declaration(ATTR_UNUSED clc::rpc::jump_answer& ret,
+                           ATTR_UNUSED const clc::rpc::request& r)
   {
-    (void)ret;
-    (void)r;
-
     LOG_INFO() << "goto_dec";
   }
 
-  void jump_to_definition(clc::rpc::jump_answer& ret, const clc::rpc::request& r)
+  void jump_to_definition(ATTR_UNUSED clc::rpc::jump_answer& ret,
+                          ATTR_UNUSED const clc::rpc::request& r)
   {
-    (void)ret;
-    (void)r;
-
     LOG_INFO() << "goto_def";
   }
 
-  void add_file(const std::vector<std::string>& argv)
+  void add_file(ATTR_UNUSED const std::vector<std::string>& argv)
   {
-    (void)argv;
-
     LOG_INFO() << "add_file";
   }
 };
 
 static tserver::TSimpleServer *server;
 
-static void stop_server(int sig)
+static void stop_server(ATTR_UNUSED int sig)
 {
-  (void)sig;
-
   if (server != NULL)
     server->stop();
 }
