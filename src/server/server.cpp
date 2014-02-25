@@ -1,5 +1,12 @@
 #include "server.h"
 
+/*
+ * Include signal.h before all the others, to avoid issue with thrift
+ * including it in the namespace apache::thrift.
+ */
+#include <signal.h>
+
+#include <server/clc_service.h>
 #include <utils/compiler.h>
 #include <utils/daemon.h>
 #include <utils/logger.h>
@@ -8,7 +15,6 @@
 
 #include <boost/make_shared.hpp>
 #include <pthread.h>
-#include <signal.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -18,42 +24,11 @@
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/transport/TServerSocket.h>
 
-#include <clc_if.h>
-#include <clc_if_types.h>
-
 namespace clc { namespace server {
 
 namespace tprotocol = apache::thrift::protocol;
 namespace ttransport = apache::thrift::transport;
 namespace tserver = apache::thrift::server;
-
-class clcService : public clc::rpc::clc_ifIf {
-public:
-  clcService() {}
-
-  void complete(ATTR_UNUSED clc::rpc::completion_answer& ret,
-                ATTR_UNUSED const clc::rpc::request& r)
-  {
-    LOG_INFO() << "complete";
-  }
-
-  void jump_to_declaration(ATTR_UNUSED clc::rpc::jump_answer& ret,
-                           ATTR_UNUSED const clc::rpc::request& r)
-  {
-    LOG_INFO() << "goto_dec";
-  }
-
-  void jump_to_definition(ATTR_UNUSED clc::rpc::jump_answer& ret,
-                          ATTR_UNUSED const clc::rpc::request& r)
-  {
-    LOG_INFO() << "goto_def";
-  }
-
-  void add_file(ATTR_UNUSED const std::vector<std::string>& argv)
-  {
-    LOG_INFO() << "add_file";
-  }
-};
 
 static tserver::TSimpleServer *server;
 
@@ -68,7 +43,7 @@ int run()
   const auto sp = utils::sock_path();
   const auto pp = utils::pid_path();
 
-  auto service = boost::make_shared<clcService>();
+  auto service = boost::make_shared<clc_service>();
   auto proc = boost::make_shared<clc::rpc::clc_ifProcessor>(service);
   auto server_transport = boost::make_shared<ttransport::TServerSocket>(sp);
   auto transport_factory = boost::make_shared<ttransport::TBufferedTransportFactory>();

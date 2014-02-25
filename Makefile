@@ -1,10 +1,10 @@
-CXX_SOURCES	:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/logger.cpp
+CXX_SOURCES	:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/server/clc_service.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/logger.cpp
 THRIFT_SOURCES	:= src/clc_if.thrift
 DOC_SOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
-CXXFLAGS	:= `pkg-config --cflags thrift` -std=c++11 -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src -Isrc
-LDFLAGS		:= `pkg-config --libs thrift`
+CXXFLAGS	:= `pkg-config --cflags thrift` -std=c++11 -pedantic -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src -Isrc
+LDFLAGS		:= `pkg-config --libs thrift` -lclang
 PREFIX		:= /usr/local
 
 GEN_SOURCES	:= $(THRIFT_SOURCES:.thrift=_types.cpp) $(THRIFT_SOURCES:.thrift=_constants.cpp) $(THRIFT_SOURCES:.thrift=.cpp)
