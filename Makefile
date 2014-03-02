@@ -3,6 +3,7 @@ CXX_SOURCES	:= src/clang-cache.cpp		\
 		   src/server/cache.cpp		\
 		   src/server/clc_service.cpp	\
 		   src/server/server.cpp	\
+		   src/utils/abspath.cpp	\
 		   src/utils/cwd.cpp		\
 		   src/utils/daemon.cpp		\
 		   src/utils/logger.cpp		\
