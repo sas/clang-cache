@@ -1,16 +1,16 @@
 #pragma once
 
 #include <clc_if.h>
+#include <server/cache.h>
 
-#include <clang-c/Index.h>
-#include <map>
 #include <string>
+#include <vector>
 
 namespace clc { namespace server {
 
-class clc_service : public clc::rpc::clc_ifIf {
+class clc_service : public clc::rpc::clc_ifIf
+{
 public:
-  clc_service();
   virtual void register_compilation(const std::vector<std::string>& argv);
   virtual void complete(clc::rpc::completion_answer& ret,
                         const clc::rpc::request& r);
@@ -19,9 +19,8 @@ public:
   virtual void find_definition(clc::rpc::jump_answer& ret,
                                const clc::rpc::request& r);
 
-private:
-  CXIndex clang_index_;
-  std::map<std::string, CXTranslationUnit> open_files_;
+public:
+  cache cache_;
 };
 
 }} // namespace clc::server

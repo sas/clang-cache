@@ -1,4 +1,12 @@
-CXX_SOURCES	:= src/clang-cache.cpp src/client/client.cpp src/server/server.cpp src/server/clc_service.cpp src/utils/mkdirp.cpp src/utils/daemon.cpp src/utils/logger.cpp
+CXX_SOURCES	:= src/clang-cache.cpp		\
+		   src/client/client.cpp	\
+		   src/server/cache.cpp		\
+		   src/server/clc_service.cpp	\
+		   src/server/server.cpp	\
+		   src/utils/daemon.cpp		\
+		   src/utils/logger.cpp		\
+		   src/utils/mkdirp.cpp		\
+
 THRIFT_SOURCES	:= src/clc_if.thrift
 DOC_SOURCES	:= doc/clang-cache.1.md
 
