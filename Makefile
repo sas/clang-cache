@@ -8,6 +8,7 @@ CXX_SOURCES	:= src/clang-cache.cpp		\
 		   src/utils/daemon.cpp		\
 		   src/utils/logger.cpp		\
 		   src/utils/mkdirp.cpp		\
+		   src/utils/waitdir.cpp	\
 
 THRIFT_SOURCES	:= src/clc_if.thrift
 DOC_SOURCES	:= doc/clang-cache.1.md
