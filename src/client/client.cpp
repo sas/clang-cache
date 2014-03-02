@@ -2,6 +2,7 @@
 
 #include <clc_if.h>
 #include <clc_if_types.h>
+#include <utils/cwd.h>
 #include <utils/logger.h>
 #include <utils/paths.h>
 
@@ -21,7 +22,6 @@ void run(int argc, char** argv)
   auto socket = boost::make_shared<ttransport::TSocket>(utils::sock_path());
   auto transport = boost::make_shared<ttransport::TBufferedTransport>(socket);
   auto protocol = boost::make_shared<tprotocol::TCompactProtocol>(transport);
-
   clc::rpc::clc_ifClient client(protocol);
 
   do {
@@ -39,9 +39,7 @@ void run(int argc, char** argv)
   } while (!transport->isOpen());
 
   std::vector<std::string> cmd(argv, argv + argc);
-
-  client.register_compilation(cmd);
-
+  client.register_compilation(cmd, utils::cwd());
   transport->close();
 }
 

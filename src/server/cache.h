@@ -13,7 +13,8 @@ class cache
 {
 public:
   cache();
-  void fill(const std::vector<std::string>& argv);
+  void fill(const std::vector<std::string>& argv,
+            const std::string& cwd);
 
 private:
   struct source_location
