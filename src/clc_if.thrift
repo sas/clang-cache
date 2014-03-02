@@ -29,9 +29,8 @@ struct jump_answer {
 }
 
 service clc_if {
+  oneway void register_compilation(1: list<string> argv),
+  jump_answer find_declaration(1: request r),
+  jump_answer find_definition(1: request r),
   completion_answer complete(1: request r),
-  jump_answer jump_to_declaration(1: request r),
-  jump_answer jump_to_definition(1: request r),
-
-  oneway void add_file(1: list<string> argv),
 }

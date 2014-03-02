@@ -40,7 +40,7 @@ void run(int argc, char** argv)
 
   std::vector<std::string> cmd(argv, argv + argc);
 
-  client.add_file(cmd);
+  client.register_compilation(cmd);
 
   transport->close();
 }
