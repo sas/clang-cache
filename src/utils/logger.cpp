@@ -33,7 +33,7 @@ logger::logger_proxy::logger_proxy(std::ostream& out, log_level msg_level,
   time(&t);
   strftime(t_str, sizeof t_str, "%Y-%m-%d %H:%M:%S", gmtime(&t));
 
-  out << "[" << t_str << "] " << level2str(msg_level) << ": ";
+  *this << "[" << t_str << "] " << level2str(msg_level) << ": ";
 }
 
 logger::logger_proxy::~logger_proxy()
@@ -41,6 +41,7 @@ logger::logger_proxy::~logger_proxy()
   if (do_strerror_)
     *this << ": " << strerror(errno);
   *this << "\n";
+
   if (do_exit_)
     exit(EXIT_FAILURE);
 }
@@ -51,14 +52,26 @@ static void thrift_logger(const char* msg)
 }
 
 logger::logger()
-  : level_(INFO)
+  : level_(INFO), out_()
 {
+  out_.open("/dev/stderr");
   apache::thrift::GlobalOutput.setOutputFunction(thrift_logger);
+}
+
+logger::~logger()
+{
+  out_.close();
 }
 
 void logger::set_level(log_level level)
 {
   level_ = level;
+}
+
+void logger::set_out(const std::string& out_file)
+{
+  out_.close();
+  out_.open(out_file.c_str());
 }
 
 logger logger_instance;

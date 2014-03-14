@@ -2,6 +2,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -29,8 +30,10 @@ private:
     template<typename T>
     logger_proxy& operator<<(const T& rhs)
     {
-      if (do_log_)
+      if (do_log_) {
         out_ << rhs;
+        out_.flush();
+      }
       return *this;
     }
 
@@ -43,14 +46,17 @@ private:
 
 public:
   logger();
+  ~logger();
   void set_level(log_level level);
+  void set_out(const std::string& out_file);
   logger_proxy log(log_level level, bool do_strerror = false)
   {
-    return logger_proxy(std::clog, level, level_, do_strerror);
+    return logger_proxy(out_, level, level_, do_strerror);
   }
 
 private:
   log_level level_;
+  std::ofstream out_;
 };
 
 /*
@@ -60,17 +66,18 @@ private:
  */
 extern logger logger_instance;
 
-#define _BASE_LOG(LEVEL, STRERR) ::clc::utils::logger_instance.log(clc::utils::logger::LEVEL, STRERR)
-#define _NOLOG()            _BASE_LOG(INVALID, false)
-#define _LOG(LEVEL)         _BASE_LOG(LEVEL, false)
-#define _PLOG(LEVEL, COND)  ((COND) ? _BASE_LOG(LEVEL, true) : _NOLOG())
+#define _BASE_LOG(LEVEL, STRERR)  ::clc::utils::logger_instance.log(clc::utils::logger::LEVEL, STRERR)
+#define _NOLOG()                  _BASE_LOG(INVALID, false)
+#define _LOG(LEVEL)               _BASE_LOG(LEVEL, false)
+#define _PLOG(LEVEL, COND)        ((COND) ? _BASE_LOG(LEVEL, true) : _NOLOG())
 
-#define SET_LEVEL(LEVEL)    ::clc::utils::logger_instance.set_level(clc::utils::logger::LEVEL)
-#define LOG_INFO()          _LOG(INFO)
-#define LOG_WARN()          _LOG(WARN)
-#define LOG_FATAL()         _LOG(FATAL)
-#define PLOG_INFO(COND)     _PLOG(INFO, COND)
-#define PLOG_WARN(COND)     _PLOG(WARN, COND)
-#define PLOG_FATAL(COND)    _PLOG(FATAL, COND)
+#define SET_LEVEL(LEVEL)          ::clc::utils::logger_instance.set_level(clc::utils::logger::LEVEL)
+#define SET_OUT(OUT_FILE)         ::clc::utils::logger_instance.set_out(OUT_FILE);
+#define LOG_INFO()                _LOG(INFO)
+#define LOG_WARN()                _LOG(WARN)
+#define LOG_FATAL()               _LOG(FATAL)
+#define PLOG_INFO(COND)           _PLOG(INFO, COND)
+#define PLOG_WARN(COND)           _PLOG(WARN, COND)
+#define PLOG_FATAL(COND)          _PLOG(FATAL, COND)
 
 }} // namespace clc::utils
