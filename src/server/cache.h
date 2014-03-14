@@ -40,6 +40,17 @@ private:
 
   /* Maps an USR to a source_location. */
   std::map<std::string, std::weak_ptr<source_location>> definition_cache_;
+
+  /* Visitors to use during processing. */
+  struct fill_visitor_data
+  {
+    decltype(file_cache_)::value_type&  file_cache_entry;
+    decltype(definition_cache_)&        definition_cache;
+  };
+
+  static enum CXChildVisitResult fill_visitor_(CXCursor cursor,
+                                               CXCursor parent,
+                                               CXClientData client_data);
 };
 
 }} // namespace clc::server
