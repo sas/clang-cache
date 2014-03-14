@@ -92,6 +92,8 @@ void start(bool foreground)
   /* Create the server and run the main function. */
   if (foreground || utils::daemonize()) {
     PLOG_FATAL(!utils::write_pidfile(pp.c_str())) << pp.c_str();
+    if (!foreground)
+      SET_OUT(utils::log_path());
     exit(run());
   }
 
