@@ -57,15 +57,18 @@ void cache::fill(const std::vector<std::string>& argv,
 {
   std::vector<const char*> strargv;
 
+  /* Convert cmdline to char**. */
   strargv.reserve(argv.size());
   for (const auto& str : argv)
     strargv.push_back(str.c_str());
 
+  /* Wait until we are in the right directory. */
   if (!utils::waitdir(cwd.c_str())) {
     PLOG_WARN(true) << "chdir()";
     return;
   }
 
+  /* Create the translation unit and extract some info. */
   auto tu = clang_createTranslationUnitFromSourceFile(clang_index_, NULL,
                                                       argv.size(),
                                                       strargv.data(),
@@ -76,11 +79,17 @@ void cache::fill(const std::vector<std::string>& argv,
 
   auto it = file_cache_.find(abspath);
 
+  /* If this file does not aready exists... */
   if (it == file_cache_.end()) {
+    /* ...create a new cache entry. */
     /* This gets the iterator to the new element that we can use later. */
     file_info fi = { tu, {} };
     it = file_cache_.insert(it, { abspath, fi });
   } else {
+    /*
+     * ...otherwise, dispose the newly created TU so we can just reparse the old
+     * one.
+     */
     clang_disposeTranslationUnit(tu);
     tu = it->second.tu;
   }
