@@ -16,10 +16,16 @@ void clc_service::register_compilation(const std::vector<std::string>& argv,
   cache_.fill(argv, cwd);
 }
 
-void clc_service::find_definition(ATTR_UNUSED clc::rpc::cursor& ret,
-                                  ATTR_UNUSED const std::string& usr)
+void clc_service::find_definition(clc::rpc::cursor& ret,
+                                  const std::string& usr)
 {
   LOG_INFO() << __FUNCTION__;
+
+  auto sl = cache_.find_definition(usr);
+
+  ret.file = sl.path;
+  ret.line = sl.line;
+  ret.column = sl.column;
 }
 
 }} // namespace clc::server
