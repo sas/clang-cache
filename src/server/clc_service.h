@@ -13,12 +13,8 @@ class clc_service : public clc::rpc::clc_ifIf
 public:
   virtual void register_compilation(const std::vector<std::string>& argv,
                                     const std::string& cwd);
-  virtual void complete(clc::rpc::completion_answer& ret,
-                        const clc::rpc::request& r);
-  virtual void find_declaration(clc::rpc::jump_answer& ret,
-                                const clc::rpc::request& r);
-  virtual void find_definition(clc::rpc::jump_answer& ret,
-                               const clc::rpc::request& r);
+  virtual void find_definition(clc::rpc::cursor& ret,
+                               const std::string& usr);
 
 public:
   cache cache_;

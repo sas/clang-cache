@@ -16,20 +16,8 @@ void clc_service::register_compilation(const std::vector<std::string>& argv,
   cache_.fill(argv, cwd);
 }
 
-void clc_service::complete(ATTR_UNUSED clc::rpc::completion_answer& ret,
-                           ATTR_UNUSED const clc::rpc::request& r)
-{
-  LOG_INFO() << __FUNCTION__;
-}
-
-void clc_service::find_declaration(ATTR_UNUSED clc::rpc::jump_answer& ret,
-                                   ATTR_UNUSED const clc::rpc::request& r)
-{
-  LOG_INFO() << __FUNCTION__;
-}
-
-void clc_service::find_definition(ATTR_UNUSED clc::rpc::jump_answer& ret,
-                                  ATTR_UNUSED const clc::rpc::request& r)
+void clc_service::find_definition(ATTR_UNUSED clc::rpc::cursor& ret,
+                                  ATTR_UNUSED const std::string& usr)
 {
   LOG_INFO() << __FUNCTION__;
 }
