@@ -12,11 +12,6 @@ namespace clc { namespace server {
 class cache
 {
 public:
-  cache();
-  void fill(const std::vector<std::string>& argv,
-            const std::string& cwd);
-
-private:
   struct source_location
   {
     std::string   path;
@@ -24,6 +19,12 @@ private:
     std::uint32_t column;
   };
 
+  cache();
+  void fill(const std::vector<std::string>& argv,
+            const std::string& cwd);
+  source_location find_definition(const std::string& usr);
+
+private:
   struct file_info
   {
     CXTranslationUnit                       tu;

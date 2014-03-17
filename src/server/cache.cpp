@@ -108,4 +108,16 @@ void cache::fill(const std::vector<std::string>& argv,
   utils::waitdir();
 }
 
+cache::source_location cache::find_definition(const std::string& usr)
+{
+  auto it = definition_cache_.find(usr);
+
+  if (it == definition_cache_.end())
+    /* XXX: This sucks, we need real error reporting here. */
+    return source_location();
+
+  auto observe = it->second.lock();
+  return observe ? *observe : source_location();
+}
+
 }} // namespace clc::server
