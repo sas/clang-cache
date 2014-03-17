@@ -17,7 +17,7 @@ namespace ttransport = apache::thrift::transport;
 
 namespace clc { namespace client {
 
-void run(int argc, char** argv)
+void register_compilation(int argc, char** argv)
 {
   auto socket = boost::make_shared<ttransport::TSocket>(utils::sock_path());
   auto transport = boost::make_shared<ttransport::TBufferedTransport>(socket);
@@ -41,6 +41,36 @@ void run(int argc, char** argv)
   std::vector<std::string> cmd(argv, argv + argc);
   client.register_compilation(cmd, utils::cwd());
   transport->close();
+}
+
+void find_definition(const char* usr)
+{
+  /* XXX: Bad copy-pasta, need to clean this up. */
+  auto socket = boost::make_shared<ttransport::TSocket>(utils::sock_path());
+  auto transport = boost::make_shared<ttransport::TBufferedTransport>(socket);
+  auto protocol = boost::make_shared<tprotocol::TCompactProtocol>(transport);
+  clc::rpc::clc_ifClient client(protocol);
+
+  do {
+    try {
+      /*
+       * When the server is being launched, we might end-up here before
+       * the server has created the unix socket. Let's loop until it has
+       * been, this shouldn't be long.
+       */
+      transport->open();
+    } catch (ttransport::TTransportException& e) {
+      /* I wonder if that is a bug in thrift. */
+      transport->close();
+    }
+  } while (!transport->isOpen());
+
+  rpc::cursor ret;
+  std::string arg(usr);
+  client.find_definition(ret, arg);
+  transport->close();
+
+  LOG_INFO() << "symbol " << arg << " is defined in " << ret.file << ":" << ret.line;
 }
 
 }} // namespace clc::client

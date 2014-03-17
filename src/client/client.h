@@ -2,6 +2,7 @@
 
 namespace clc { namespace client {
 
-void run(int argc, char** argv);
+void register_compilation(int argc, char** argv);
+void find_definition(const char* usr);
 
 }} // namespace clc::client
