@@ -88,10 +88,11 @@ void cache::fill(const std::vector<std::string>& argv,
   } else {
     /*
      * ...otherwise, dispose the newly created TU so we can just reparse the old
-     * one.
+     * one, and invalidate the old definitions cache.
      */
     clang_disposeTranslationUnit(tu);
     tu = it->second.tu;
+    it->second.definitions.clear();
   }
 
   if (clang_reparseTranslationUnit(tu, 0, NULL, 0) != 0)
