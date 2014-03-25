@@ -47,8 +47,10 @@ bool waitdir(const char* path)
         break;
       }
 
-      /* Now we can wait until something happens to the variable. */
-      pthread_cond_wait(&cond, &mut);
+      if (count != 0) {
+        /* Now we can wait until something happens to the variable. */
+        pthread_cond_wait(&cond, &mut);
+      }
 
       /*
        * Now that we are done waiting on the cond variable, we either
