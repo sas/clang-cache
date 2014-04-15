@@ -108,6 +108,28 @@ void cache::fill(const std::vector<std::string>& argv,
   utils::waitdir();
 }
 
+const std::string cache::get_usr(const source_location& loc)
+{
+  const auto& it = this->file_cache_.find(loc.path);
+  if (it == file_cache_.end()) {
+    return "";
+  } else {
+    const auto tu = it->second.tu;
+    const auto& clang_file = clang_getFile(tu, loc.path.c_str());
+    const auto& clang_loc = clang_getLocation(tu, clang_file,
+                                              loc.line, loc.column);
+    const auto& clang_cursor = clang_getCursor(tu, clang_loc);
+    if (clang_Cursor_isNull(clang_cursor))
+      return "";
+
+    const auto& ref_cursor = clang_getCursorReferenced(clang_cursor);
+    if (clang_Cursor_isNull(ref_cursor))
+      return "";
+
+    return clang_getCString(clang_getCursorUSR(ref_cursor));
+  }
+}
+
 cache::source_location cache::find_definition(const std::string& usr)
 {
   auto it = definition_cache_.find(usr);

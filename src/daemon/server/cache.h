@@ -22,6 +22,7 @@ public:
   cache();
   void fill(const std::vector<std::string>& argv,
             const std::string& cwd);
+  const std::string get_usr(const source_location& loc);
   source_location find_definition(const std::string& usr);
 
 private:

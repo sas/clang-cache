@@ -60,7 +60,7 @@ void find_definition(const char* usr)
 
   rpc::cursor ret;
   std::string arg(usr);
-  client->find_definition(ret, arg);
+  client->find_definition_from_usr(ret, arg);
   transport->close();
 
   delete client;

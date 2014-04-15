@@ -58,6 +58,8 @@ $(TARGET): $(OBJECTS)
 %.cpp %.h %_types.cpp %_types.h %_constants.cpp %_constants.h: %.thrift
 	@mkdir -p $(dir $@)
 	thrift --gen cpp:pure_enums -out $(dir $@) $<
+	# Yes this is lame, but we don't have much choice...
+	thrift --gen py:new_style -out $(dir $(lastword $(MAKEFILE_LIST)))src/vim/plugin $<
 
 %.1: %.1.md
 	@mkdir -p $(dir $@)
