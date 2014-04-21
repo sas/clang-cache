@@ -1,20 +1,20 @@
-CXX_SOURCES	:= src/clang-cache.cpp		\
-		   src/client/client.cpp	\
-		   src/server/cache.cpp		\
-		   src/server/clc_service.cpp	\
-		   src/server/server.cpp	\
-		   src/utils/abspath.cpp	\
-		   src/utils/cwd.cpp		\
-		   src/utils/daemon.cpp		\
-		   src/utils/logger.cpp		\
-		   src/utils/mkdirp.cpp		\
-		   src/utils/waitdir.cpp	\
+CXX_SOURCES	:= src/daemon/clang-cache.cpp		\
+		   src/daemon/client/client.cpp		\
+		   src/daemon/server/cache.cpp		\
+		   src/daemon/server/clc_service.cpp	\
+		   src/daemon/server/server.cpp		\
+		   src/daemon/utils/abspath.cpp		\
+		   src/daemon/utils/cwd.cpp		\
+		   src/daemon/utils/daemon.cpp		\
+		   src/daemon/utils/logger.cpp		\
+		   src/daemon/utils/mkdirp.cpp		\
+		   src/daemon/utils/waitdir.cpp
 
 THRIFT_SOURCES	:= src/clc_if.thrift
 DOC_SOURCES	:= doc/clang-cache.1.md
 
 CXX		?= g++
-CXXFLAGS	:= `pkg-config --cflags thrift` -std=c++11 -pedantic -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src -Isrc
+CXXFLAGS	:= `pkg-config --cflags thrift` -std=c++11 -pedantic -Wall -Wextra -Werror -I$(dir $(lastword $(MAKEFILE_LIST)))src/daemon -Isrc/daemon -I$(dir $(lastword $(MAKEFILE_LIST)))src -Isrc
 LDFLAGS		:= `pkg-config --libs thrift` -lclang
 PREFIX		:= /usr/local
 
