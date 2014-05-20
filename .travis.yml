@@ -22,4 +22,5 @@ before_script:
   - cd "$BUILDDIR"
 script:
   - make -f "$OLDPWD/Makefile" all
-  - sudo make -f "$OLDPWD/Makefile" install
+  - sudo make -f "$OLDPWD/Makefile" install-daemon
+  - sudo make -f "$OLDPWD/Makefile" install-vim

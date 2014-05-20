@@ -82,11 +82,14 @@ $(VIM_TARGET): $(VIM_SOURCES) $(VIM_THRIFT)
 
 # Boilerplate rules
 
-install: all
-	install -d $(PREFIX)/bin/
-	install -d $(PREFIX)/share/man/man1/
-	install -s -t $(PREFIX)/bin/ $(DAEMON_TARGET)
-	install -t $(PREFIX)/share/man/man1/ $(DOC_TARGET)
+install-daemon: $(DAEMON_TARGET) $(DOC_TARGET)
+	mkdir -p $(PREFIX)/bin $(PREFIX)/share/man/man1
+	cp $(DAEMON_TARGET) $(PREFIX)/bin/
+	cp $(DOC_TARGET) $(PREFIX)/share/man/man1/
+
+install-vim: $(VIM_TARGET)
+	mkdir -p $(PREFIX)/share/vim/vimfiles
+	cp -r $(VIM_TARGET) $(PREFIX)/share/vim/vimfiles/
 
 clean:
 	rm -fr $(DAEMON_OBJECTS)
@@ -99,7 +102,7 @@ distclean: clean
 	rm -fr $(VIM_TARGET)
 	rm -fr $(DOC_TARGET)
 
-.PHONY: default all install clean distclean
+.PHONY: default all install-daemon install-vim clean distclean
 .SECONDARY:
 
 -include $(DEPENDS)
